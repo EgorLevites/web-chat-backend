@@ -25,10 +25,10 @@ func enableCORS(next http.Handler) http.Handler {
 func main() {
 
 	// Serve static files
-	fs := http.FileServer(http.Dir("../web-chat-frontend"))
+	//fs := http.FileServer(http.Dir("../web-chat-frontend"))
 
 	mux := http.NewServeMux()
-	mux.Handle("/", fs)
+	//mux.Handle("/", fs)
 	mux.HandleFunc("/ws", handlers.HandleWebSocket)
 	mux.HandleFunc("/api/clients", handlers.HandleClientCount)
 	mux.HandleFunc("/api/welcome", handlers.HandleWelcomeMessage)
