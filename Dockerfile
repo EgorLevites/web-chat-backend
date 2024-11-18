@@ -1,35 +1,35 @@
 # Stage 1: Build the Go binary
 FROM golang:1.20-alpine AS builder
 
-# Устанавливаем необходимые пакеты
+# Install necessary packages
 RUN apk update && apk add --no-cache git
 
-# Устанавливаем рабочую директорию
+# Set the working directory
 WORKDIR /app
 
-# Копируем файлы go.mod и go.sum
+# Copy dependency files
 COPY go.mod go.sum ./
 
-# Загружаем зависимости
+# Download dependencies
 RUN go mod download
 
-# Копируем исходный код
+# Copy source code
 COPY . .
 
-# Сборка приложения
+# Build the application
 RUN go build -o web-chat-backend main.go
 
-# Stage 2: Создаем минимальный образ для выполнения приложения
+# Stage 2: Create a minimal image to run the application
 FROM alpine:latest
 
-# Устанавливаем рабочую директорию
+# Set the working directory
 WORKDIR /app
 
-# Копируем скомпилированный бинарный файл из предыдущего этапа
+# Copy the built binary from the builder stage
 COPY --from=builder /app/web-chat-backend .
 
-# Открываем порт 8080
+# Expose the backend port
 EXPOSE 8080
 
-# Команда для запуска приложения
+# Run the backend application
 CMD ["./web-chat-backend"]
